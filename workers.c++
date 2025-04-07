@@ -9,16 +9,7 @@
 
 using namespace std;
 
-void logo();
-int mainMenu();
-void pressEnterToContinue();
-void systemProcessing();
-bool noWorkersFound(int);
-string generateWorkerId(int);
-void sortWorkersMenu();
-int sortWorkerMenu();
-
-
+// Move the Worker struct definition here, before function declarations
 struct Worker {
     string name;
     string id;
@@ -113,8 +104,21 @@ struct Worker {
     }
 };
 
-void initializeWorkers(Worker workers[]) {
+// Function declarations can now use Worker without issues
+void logo();
+int mainMenu();
+void pressEnterToContinue();
+void systemProcessing();
+bool noWorkersFound(int);
+string generateWorkerId(int);
+int sortWorkerMenu(); 
+void sortBySalary(Worker workers[], int count);
+void sortByWage(Worker workers[], int count);
+void sortByAge(Worker workers[], int count);
+void sortByHours(Worker workers[], int count);
 
+// Rest of the code remains the same
+void initializeWorkers(Worker workers[]) {
     workers[0].name = "Ally";
     workers[0].id = "W001";
     workers[0].address = "789 Pine Rd";
@@ -124,14 +128,14 @@ void initializeWorkers(Worker workers[]) {
     workers[0].hours = 150;
     workers[0].calculateSalary();
 
-        workers[1].name = "Bob";
-        workers[1].id = "W002";
-        workers[1].address = "456 Oak Ave";
-        workers[1].age = 28;
-        workers[1].gender = 'M';
-        workers[1].wage = 18.0;
-        workers[1].hours = 140;
-        workers[1].calculateSalary();
+    workers[1].name = "Bob";
+    workers[1].id = "W002";
+    workers[1].address = "456 Oak Ave";
+    workers[1].age = 28;
+    workers[1].gender = 'M';
+    workers[1].wage = 18.0;
+    workers[1].hours = 140;
+    workers[1].calculateSalary();
 }
 
 void deleteWorker(Worker workers[], int count, string id) {
@@ -205,10 +209,11 @@ int sortWorkerMenu() {
     SetConsoleTextAttribute(consoleColor, 4);
     cout << endl;
     cout << "============[ Display Worker Ordering ]============" << endl;
-    cout << "[1]. Show Ascendig Order by Salary" << endl;
-    cout << "[2]. Show Ascendig Order by Wage" << endl;
-    cout << "[3]. Show Ascendig Order by Age" << endl;
-    cout << "[4]. Show Ascendig Order by Hours" << endl;
+    cout << "[1]. Display original Order" << endl;
+    cout << "[2]. Show Ascending Order by Wage" << endl;
+    cout << "[3]. Show Ascending Order by Age" << endl;
+    cout << "[4]. Show Ascending Order by Hours" << endl;
+    cout << "[5]. Show Ascending Order by Salary" << endl;
     cout << "[0]. Exit" << endl;
     cout << "==========================================" << endl;
     cout << "Enter your choice: ";
@@ -229,13 +234,62 @@ string generateWorkerId(int count) {
     return ss.str();
 }
 
+void sortBySalary(Worker workers[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (workers[j].netSalary > workers[j + 1].netSalary) {
+                Worker temp = workers[j];
+                workers[j] = workers[j + 1];
+                workers[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sortByWage(Worker workers[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (workers[j].wage > workers[j + 1].wage) {
+                Worker temp = workers[j];
+                workers[j] = workers[j + 1];
+                workers[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sortByAge(Worker workers[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (workers[j].age > workers[j + 1].age) {
+                Worker temp = workers[j];
+                workers[j] = workers[j + 1];
+                workers[j + 1] = temp;
+            }
+        }
+    }
+}
+
+void sortByHours(Worker workers[], int count) {
+    for (int i = 0; i < count - 1; i++) {
+        for (int j = 0; j < count - i - 1; j++) {
+            if (workers[j].hours > workers[j + 1].hours) {
+                Worker temp = workers[j];
+                workers[j] = workers[j + 1];
+                workers[j + 1] = temp;
+            }
+        }
+    }
+}
+
 void systemProcessing() {
     int choice;
     int n = 5;
     Worker workers[5];
     initializeWorkers(workers);
     int count = 2;
-    while (choice != 6) {
+
+    do {  
         system("cls");
         choice = mainMenu();
         system("cls");
@@ -250,32 +304,63 @@ void systemProcessing() {
                 }
                 break;
             case 2:
-                int choice;
-                while (choice != 5)
-                {
-                    choice = sortWorkerMenu();
-                    switch (choice) {
-                        case 1:
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            break;
-                        case 4:
-                            break;
-                        case 5:
-                            break;
-                        default:
-                            cout << "Invalid choice! Try again." << endl;
-                            break;
-                }
                 if (noWorkersFound(count)) break;
                 cout << "==========[View Worker Information]===========" << endl;
-                for (int i = 0; i < count; i++) {
-                    workers[i].displayWorker();
-                    cout << "----------------------------------------" << endl;
+                {
+                    int sortChoice;
+                    bool exitSort = false;
+                    while (!exitSort) {
+                        system("cls");
+                        sortChoice = sortWorkerMenu();
+                        switch (sortChoice) {
+                            case 5:
+                                sortBySalary(workers, count);
+                                for (int i = 0; i < count; i++) {
+                                    workers[i].displayWorker();
+                                    cout << "----------------------------------------" << endl;
+                                }
+                                pressEnterToContinue();
+                                break;
+                            case 2:
+                                sortByWage(workers, count);
+                                for (int i = 0; i < count; i++) {
+                                    workers[i].displayWorker();
+                                    cout << "----------------------------------------" << endl;
+                                }
+                                pressEnterToContinue();
+                                break;
+                            case 3:
+                                sortByAge(workers, count);
+                                for (int i = 0; i < count; i++) {
+                                    workers[i].displayWorker();
+                                    cout << "----------------------------------------" << endl;
+                                }
+                                pressEnterToContinue();
+                                break;
+                            case 4:
+                                sortByHours(workers, count);
+                                for (int i = 0; i < count; i++) {
+                                    workers[i].displayWorker();
+                                    cout << "----------------------------------------" << endl;
+                                }
+                                pressEnterToContinue();
+                                break;
+                            case 1:
+                            for (int i = 0; i < count; i++) {
+                                workers[i].displayWorker();
+                                cout << "----------------------------------------" << endl;
+                            }
+                            pressEnterToContinue();
+                            break;
+                            case 0:
+                                exitSort = true;
+                                break;
+                            default:
+                                cout << "Invalid choice! Try again." << endl;
+                                pressEnterToContinue();
+                        }
+                    }
                 }
-
                 break;
             case 3:
                 if (noWorkersFound(count)) break;
@@ -318,14 +403,15 @@ void systemProcessing() {
                     searchWorker(workers, count, id);
                 }
                 break;
-            case 6:
+            case 0:
                 break;
             default:
                 cout << "Invalid choice! Please try again." << endl;
         }
-        pressEnterToContinue();
-    }
-}
+        if (choice != 2) { 
+            pressEnterToContinue();
+        }
+    } while (choice != 0);
 }
 
 bool noWorkersFound(int count) {
@@ -335,4 +421,3 @@ bool noWorkersFound(int count) {
     }
     return false;
 }
-
