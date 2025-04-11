@@ -174,7 +174,7 @@ int main() {
 
 void logo() {
     HANDLE consoleColor = GetStdHandle(STD_OUTPUT_HANDLE);
-    fstream file("logo.txt");
+    fstream file("logo1.txt");
     string line;
     while (getline(file, line)) {
         SetConsoleTextAttribute(consoleColor, 5);
